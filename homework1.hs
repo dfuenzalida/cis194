@@ -41,4 +41,16 @@ sumDigits xs = foldl (+) 0 (map (\x -> foldl (+) 0 (toDigits x)) xs)
 validate :: Integer -> Bool
 validate n = ((sumDigits (doubleEveryOther (toDigits n))) `rem` 10) == 0
 
-main = putStrLn (show (validate 4012888888881881))
+-- main = putStrLn (show (validate 4012888888881881))
+
+----------------------------------------
+-- Exercise 5
+----------------------------------------
+
+type Peg = String
+type Move = (Peg, Peg)
+
+hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
+
+hanoi 1 a b _ = [(a,b)]
+hanoi n a b c = concat [(hanoi (n-1) a c b), [(a,b)], (hanoi (n-1) c b a)]
