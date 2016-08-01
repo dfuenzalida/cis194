@@ -48,3 +48,30 @@ insert _ mt = mt
 build :: [LogMessage] -> MessageTree
 build = foldl (\m l -> insert l m) Leaf
 
+----------------------------------------
+-- Exercise 4
+----------------------------------------
+
+inOrder :: MessageTree -> [LogMessage]
+inOrder Leaf = []
+inOrder (Node l lm r) = concat[(inOrder l), [lm], (inOrder r)]
+
+----------------------------------------
+-- Exercise 5
+----------------------------------------
+
+lm2str :: LogMessage -> String
+lm2str (LogMessage _ _ msg) = msg
+lm2str (Unknown msg) = msg
+
+relevantError :: LogMessage -> Bool
+relevantError (LogMessage (Error level) _ _) = (level >= 50)
+relevantError _ = False
+
+whatWentWrong :: [LogMessage] -> [String]
+whatWentWrong lms = map lm2str $ filter relevantError lms
+
+-- Test with:
+-- :l LogAnalysis.hs
+-- testWhatWentWrong parse whatWentWrong "sample.log"
+
