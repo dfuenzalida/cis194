@@ -30,7 +30,7 @@ streamToList :: Stream a -> [a]
 streamToList (Stream h r) = h : (streamToList r)
 
 instance Show a => Show (Stream a) where
-  show x = show $ take 10 $ streamToList x
+  show x = show $ take 20 $ streamToList x
 
 ----------------------------------------
 -- Exercise 4
@@ -44,4 +44,22 @@ streamMap f (Stream h r) = kons (f h) (streamMap f r)
 
 streamFromSeed :: (a -> a) -> a -> Stream a
 streamFromSeed f x = kons x (streamFromSeed f (f x))
+
+----------------------------------------
+-- Exercise 5
+----------------------------------------
+
+nats :: Stream Integer
+nats = streamFromSeed succ 0
+
+lgDiv :: Integer -> Integer
+lgDiv x =
+  let po2 = streamToList $ streamFromSeed (2*) 1
+      smallPo2 = takeWhile (<=x) po2
+      pairs = zip [0..] smallPo2
+      fpairs = filter (\(a,b) -> x `mod` b == 0) pairs
+  in last $ map fst fpairs
+
+ruler :: Stream Integer
+ruler = streamMap lgDiv $ streamMap succ nats
 
